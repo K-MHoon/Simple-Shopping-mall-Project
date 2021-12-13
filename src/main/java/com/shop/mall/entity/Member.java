@@ -2,10 +2,7 @@ package com.shop.mall.entity;
 
 import com.shop.mall.constant.Role;
 import com.shop.mall.dto.MemberFormDto;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
@@ -16,6 +13,8 @@ import javax.persistence.*;
 @Setter
 @ToString
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Member {
     @Id
     @GeneratedValue
