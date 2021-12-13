@@ -1,14 +1,16 @@
 package com.shop.mall.entity;
 
 import com.shop.mall.constant.OrderStatus;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class OrderItem {
 
     @Id @GeneratedValue
