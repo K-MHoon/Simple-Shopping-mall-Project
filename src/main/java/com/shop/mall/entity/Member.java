@@ -40,7 +40,7 @@ public class Member {
                 .email(memberFromDto.getEmail())
                 .address(memberFromDto.getAddress())
                 .password(passwordEncoder.encode(memberFromDto.getPassword()))
-                .role(Role.USER)
+                .role(Role.ADMIN)
                 .build();
     }
 }
