@@ -4,7 +4,6 @@ import com.shop.mall.constant.ItemSellStatus;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -14,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Item {
+public class Item extends BaseEntity {
 
     @Id
     @GeneratedValue
@@ -37,7 +36,4 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus; // 상품 판매 상태
 
-    private LocalDateTime regTime; // 등록 시간
-
-    private LocalDateTime updateTime; // 수정 시간
 }

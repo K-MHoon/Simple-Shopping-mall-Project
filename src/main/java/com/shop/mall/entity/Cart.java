@@ -3,13 +3,14 @@ package com.shop.mall.entity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "cart")
 @Getter @Setter @ToString
-public class Cart {
+public class Cart extends BaseEntity {
 
     @Id
     @Column(name = "cart_id")
