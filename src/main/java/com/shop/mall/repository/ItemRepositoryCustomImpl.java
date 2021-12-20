@@ -6,8 +6,11 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.shop.mall.constant.ItemSellStatus;
 import com.shop.mall.dto.ItemSearchDto;
+import com.shop.mall.dto.MainItemDto;
+import com.shop.mall.dto.QMainItemDto;
 import com.shop.mall.entity.Item;
 import com.shop.mall.entity.QItem;
+import com.shop.mall.entity.QItemImg;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +19,9 @@ import org.thymeleaf.util.StringUtils;
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static com.shop.mall.entity.QItem.item;
+import static com.shop.mall.entity.QItemImg.itemImg;
 
 public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
 
@@ -27,11 +33,11 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
 
     @Override
     public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
-        QueryResults<Item> results = queryFactory.selectFrom(QItem.item)
+        QueryResults<Item> results = queryFactory.selectFrom(item)
                 .where(regDtsAfter(itemSearchDto.getSearchDateType()),
                         searchSellStatusEq(itemSearchDto.getSearchSellStatus()),
                         searchByLike(itemSearchDto.getSearchBy(), itemSearchDto.getSearchQuery()))
-                .orderBy(QItem.item.id.desc())
+                .orderBy(item.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
@@ -41,16 +47,43 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
         return new PageImpl<>(content, pageable, total);
     }
 
+    @Override
+    public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
+        QueryResults<MainItemDto> results = queryFactory.select(new QMainItemDto(
+                        item.id,
+                        item.itemName,
+                        item.itemDetail,
+                        itemImg.imgUrl,
+                        item.price)
+                )
+                .from(itemImg)
+                .join(itemImg.item, item)
+                .where(itemImg.repimgYn.eq("Y"),
+                        itemNameLike(itemSearchDto.getSearchQuery()))
+                .orderBy(item.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+
+        List<MainItemDto> content = results.getResults();
+        long total = results.getTotal();
+        return new PageImpl<>(content, pageable, total);
+    }
+
+    private BooleanExpression itemNameLike(String searchQuery) {
+        return StringUtils.isEmpty(searchQuery) ? null : item.itemName.like("%" + searchQuery + "%");
+    }
+
     private BooleanExpression searchSellStatusEq(ItemSellStatus searchSellStatus) {
-        return searchSellStatus == null ? null : QItem.item.itemSellStatus.eq(searchSellStatus);
+        return searchSellStatus == null ? null : item.itemSellStatus.eq(searchSellStatus);
     }
 
 
     private BooleanExpression searchByLike(String searchBy, String searchQuery) {
         if(StringUtils.equals("itemName", searchBy)) {
-            return QItem.item.itemName.like("%" + searchQuery + "%");
+            return item.itemName.like("%" + searchQuery + "%");
         } else if(StringUtils.equals("createdBy", searchBy)) {
-            return QItem.item.createdBy.like("%" + searchQuery + "%");
+            return item.createdBy.like("%" + searchQuery + "%");
         }
 
         return null;
@@ -70,6 +103,6 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
             dateTime = dateTime.minusMonths(6);
         }
 
-        return QItem.item.regTime.after(dateTime);
+        return item.regTime.after(dateTime);
     }
 }

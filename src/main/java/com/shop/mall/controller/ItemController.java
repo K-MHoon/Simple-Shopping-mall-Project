@@ -2,6 +2,7 @@ package com.shop.mall.controller;
 
 import com.shop.mall.dto.ItemFormDto;
 import com.shop.mall.dto.ItemSearchDto;
+import com.shop.mall.dto.MainItemDto;
 import com.shop.mall.entity.Item;
 import com.shop.mall.service.ItemService;
 import lombok.RequiredArgsConstructor;

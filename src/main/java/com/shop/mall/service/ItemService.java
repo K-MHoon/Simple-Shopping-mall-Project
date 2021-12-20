@@ -3,11 +3,13 @@ package com.shop.mall.service;
 import com.shop.mall.dto.ItemFormDto;
 import com.shop.mall.dto.ItemImgDto;
 import com.shop.mall.dto.ItemSearchDto;
+import com.shop.mall.dto.MainItemDto;
 import com.shop.mall.entity.Item;
 import com.shop.mall.entity.ItemImg;
 import com.shop.mall.repository.ItemImgRepository;
 import com.shop.mall.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
+import org.jboss.jandex.Main;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -82,5 +84,10 @@ public class ItemService {
     @Transactional(readOnly = true)
     public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
         return itemRepository.getAdminItemPage(itemSearchDto, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
+        return itemRepository.getMainItemPage(itemSearchDto, pageable);
     }
 }
